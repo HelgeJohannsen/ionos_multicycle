@@ -3,7 +3,7 @@ import { useApi, useCheckoutToken } from "@shopify/ui-extensions-react/checkout"
 import {useCallback, useState, useEffect} from "react";
 
 export function backendUrl(){
-    return "https://e-bike.cpro-server.de"
+    return "https://cons-f-dev.cpro-server.de"
 }
 
 

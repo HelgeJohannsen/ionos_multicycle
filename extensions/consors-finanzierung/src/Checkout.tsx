@@ -76,6 +76,7 @@ function Extension() {
 
   const [consorsUUID, setConsorsUUID] = useStringMetafield("consors", "consorsUUID")
   const [consorsStateMetafield, setConsorsStateMetafield] = useStringMetafield("consors", "state")
+  const [consorsUsed, setConsorsUsed] = useStringMetafield("consors", "used")
   const [consorsState, setConsorsState] = useState<string|undefined>(undefined)
   const [creditAmount,setCreditAmount] = useState<string|undefined>(undefined)
   const fetchState = useFetching(consorsUUID === undefined ? undefined : `${backendUrl()}/api/public/getstate/${consorsUUID}`)
@@ -119,14 +120,20 @@ function Extension() {
       }
   },[appSettings?.minBestellWert])
 
-
   const financeOptionSelected = useMemo(
     () => {
       if(options.length == 1 && options[0].type === "manualPayment" && appSettings?.paymentHandle != undefined && options[0].handle == appSettings.paymentHandle){
+          setConsorsUsed("true")
         return true
       }else{
+        if(appSettings?.paymentHandle != undefined){
+          if(shop.name != "helge-test"){
+          setConsorsUsed("false")
+        }
+        }
         return false
       }
+
     }
     ,[options, options[0]?.handle, appSettings, appSettings?.paymentHandle]
   )
@@ -184,9 +191,7 @@ console.log()
       behavior: "allow",
     };
   });
-  if(appSettings?.paymentHandle ==""){
-    console.log("handle:", options[0].handle)
-  }
+
   if(!financeOptionSelected){
     // There are no manual payment Options
     //setConsorsUsed("false");
