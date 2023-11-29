@@ -6,11 +6,15 @@ set DATABASE_URL=mysql://root:oY8io2Shshoo9Eix@localhost:3306/bike_db
 ```
 To access db:
 ```bash
-docker exec -it e-bike_db mysql -u root -p
+docker exec -it multicycle_db mysql -u root -p
 show databases;
 use e-bike;
- Select * from ShopifyOrderCreatedUnhandled;
+ Select * from Config;
  DELETE FROM ShopifyOrderCreatedUnhandled WHERE orderId=5781596373321;
+
+ UPDATE Config
+SET paymentHandle = 'Alfred Schmidt'
+WHERE id = 1;
 ```
 DATABASE_URL=mysql/${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 

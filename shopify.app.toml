@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-name = "consors-e-bike"
-client_id = "7f2810773e8c3c724d536a825e9f4e98"
+name = "consors-f-multicycle"
+client_id = "98095151d80690ec33257c08a702f377"
 application_url = "https://cons-6a9dc71762e0.herokuapp.com"
 embedded = true
 
