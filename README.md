@@ -13,8 +13,8 @@ use e-bike;
  DELETE FROM ShopifyOrderCreatedUnhandled WHERE orderId=5781596373321;
 
  UPDATE Config
-SET paymentHandle = 'Alfred Schmidt'
-WHERE id = 1;
+SET paymentHandle = 'custom-manual-payment-723f25c1c670169832680fd448b26ad5'
+WHERE id = 2;
 ```
 DATABASE_URL=mysql/${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 

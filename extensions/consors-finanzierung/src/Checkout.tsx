@@ -222,7 +222,7 @@ console.log()
         <Banner title='Informationen zur Finanzierung mit Consors Finanz'>
           {  !currencyIsSupported ? <Text> Die Währung {totalAmount.currencyCode} wird nicht unterstuetzt </Text>
             : !countryIsSupported ? <Text>Finanzierung ist nur innerhalb Deutschlands oder Österreichs möglich</Text>
-            : !mindestBestellwertErreicht ? <Text>Der Mindesbestellwert von {minBestellWert}€ für diese Bezahlmethode ist noch nicht erreicht</Text>
+            : !mindestBestellwertErreicht ? <Text>Der Mindesbestellwert von {(minBestellWert / 100).toFixed(2).replace(".",",")}€ für diese Bezahlmethode ist noch nicht erreicht</Text>
             : consorsLink == undefined ? <Text>Technische Probleme mit der Finanzierung</Text>
             : consorsState == "proposal" ? <Text>Finanzierungsantrag erfolgreich bearbeitet</Text>
             : <> <Link onPress={startConsorsProcess} to={consorsLink} external={false}>Klicken sie hier</Link><Text> oder auf den Button um einen Finanzierungsantrag zu stellen. </Text> {
