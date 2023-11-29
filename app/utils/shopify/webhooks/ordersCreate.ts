@@ -28,7 +28,7 @@ export async function webbhook_oredersCreate(shop: string, payload: unknown){
 
   //console.log("consorsUsed", consorsUsed)
 if(isLive){
-  if(orderData.payment_gateway_names.includes("Ratenzahlung") || orderData.payment_gateway_names.includes("Consors Finanzierung") || orderData.payment_gateway_names.includes("bogus") ){
+  if(orderData.payment_gateway_names.includes("Ratenzahlung") || orderData.payment_gateway_names.includes("Consors Finanzierung") || orderData.payment_gateway_names.includes("Finanzierung by Consors Finanz") ){
     const tags = await addTags(shop, orderData.admin_graphql_api_id, "Consors Finanzierung")
     const createdShopifyOrderCreatedUnhandled = await setOrderId(orderData.checkout_token, orderData.id).then(
       ()=> createShopifyOrderCreatedUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
