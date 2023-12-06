@@ -16,8 +16,9 @@ const orderFulfilled = z.object({
 export async function webbhook_ordersFulfillment(shop: string, payload: unknown){
   const data = payload?.valueOf()
   
-  if(orderFulfilled.safeParse(data)){
-    const orderData = orderFulfilled.parse(data)
+  const result = orderFulfilled.safeParse(data) 
+  if(result.success){
+    const orderData = result.data
     console.log("parsed oderData", orderData)
     if(orderData.tags.includes('Consors Finanzierung')){
       const createdShopifyOrderCreatedUnhandled = await createShopifyOrderFulfillmentUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)

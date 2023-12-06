@@ -14,8 +14,11 @@ const orderCanceled = z.object({
   
 export async function webbhook_oredersCancel(shop: string, payload: unknown){
   const data = payload?.valueOf()
-  if(orderCanceled.safeParse(data)){
-    const orderData = orderCanceled.parse(data)
+
+  const parseResult = orderCanceled.safeParse(data)
+
+  if(parseResult.success){
+    const orderData = parseResult.data
     console.log("parsed oderData", orderData)
     if(orderData.tags.includes('Consors Finanzierung')){
       console.log("Cancel order because it is Consors Finanzierung:", orderData)

@@ -48,7 +48,14 @@ export async function action({request, params}: LoaderArgs) {
   try{
     const obj = Object.fromEntries(nonEmptySearchParams)
     console.log(obj)
-    notification = consorsNotification.parse(obj)
+    const result = consorsNotification.safeParse(obj)
+    if(result.success){
+      notification = result.data
+    }else{
+      return new Response("not OK", {
+        status: 400
+      });  
+    }
   }catch(error){
     console.error(error)
     return new Response("not OK", {
