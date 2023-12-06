@@ -12,7 +12,7 @@ const orderCreated = z.object({
   id: z.number(),
   admin_graphql_api_id: z.string(),
   current_total_price: z.string(),
-  checkout_token: z.string(),
+  checkout_token: z.string().nullish(),
   payment_gateway_names: z.string().array()
 })
 
@@ -26,22 +26,26 @@ export async function webbhook_oredersCreate(shop: string, payload: unknown){
   console.log("payment_gateway_names", orderData.payment_gateway_names[0])
   const isLive = await isAppLive(shop)
 
-  //console.log("consorsUsed", consorsUsed)
-if(isLive){
-  if(orderData.payment_gateway_names.includes("Ratenzahlung") || orderData.payment_gateway_names.includes("Consors Finanzierung") || orderData.payment_gateway_names.includes("Finanzierung by Consors Finanz") ){
-    const tags = await addTags(shop, orderData.admin_graphql_api_id, "Consors Finanzierung")
-    const createdShopifyOrderCreatedUnhandled = await setOrderId(orderData.checkout_token, orderData.id).then(
-      ()=> createShopifyOrderCreatedUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
-    )
-    console.log("createdShopifyOrderCreatedUnhandled", createdShopifyOrderCreatedUnhandled)
+  if(orderData.checkout_token == undefined){
+    console.log("ignoring order, no checkout token", orderData)
   }else{
-    const consorsUsed = await getConsorsused(shop, orderData.admin_graphql_api_id)
-    console.log("Consors Payment not used",consorsUsed)
-    return false
+    //console.log("consorsUsed", consorsUsed)
+    if(isLive){
+      if(orderData.payment_gateway_names.includes("Ratenzahlung") || orderData.payment_gateway_names.includes("Consors Finanzierung") || orderData.payment_gateway_names.includes("Finanzierung by Consors Finanz") ){
+        const tags = await addTags(shop, orderData.admin_graphql_api_id, "Consors Finanzierung")
+        const createdShopifyOrderCreatedUnhandled = await setOrderId(orderData.checkout_token, orderData.id).then(
+          ()=> createShopifyOrderCreatedUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
+        )
+        console.log("createdShopifyOrderCreatedUnhandled", createdShopifyOrderCreatedUnhandled)
+      }else{
+        const consorsUsed = await getConsorsused(shop, orderData.admin_graphql_api_id)
+        console.log("Consors Payment not used",consorsUsed)
+        return false
+      }
+    }else{
+      console.log("Order not handled becauseApp is offline",)
+    }
   }
-}else{
-  console.log("Order not handled becauseApp is offline",)
-}
   // const transactionId = await getTransactionId(shop, orderData.admin_graphql_api_id)
   // if(transactionId != undefined){
   //   await consorsApi.provideOrderId(transactionId, orderData.id)
