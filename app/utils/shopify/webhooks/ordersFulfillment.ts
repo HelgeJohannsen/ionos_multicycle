@@ -15,14 +15,18 @@ const orderFulfilled = z.object({
 
 export async function webbhook_ordersFulfillment(shop: string, payload: unknown){
   const data = payload?.valueOf()
-  console.log(data)  // as https://shopify.dev/docs/api/admin-rest/2023-01/resources/webhook#event-topics-orders-create
-  const orderData = orderFulfilled.parse(data)
-  console.log("parsed oderData", orderData)
-  if(orderData.tags.includes('Consors Finanzierung')){
-  const createdShopifyOrderCreatedUnhandled = await createShopifyOrderFulfillmentUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
-  console.log("createdShopifyOrderCreatedUnhandled", createdShopifyOrderCreatedUnhandled)
+  
+  if(orderFulfilled.safeParse(data)){
+    const orderData = orderFulfilled.parse(data)
+    console.log("parsed oderData", orderData)
+    if(orderData.tags.includes('Consors Finanzierung')){
+      const createdShopifyOrderCreatedUnhandled = await createShopifyOrderFulfillmentUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
+      console.log("createdShopifyOrderCreatedUnhandled", createdShopifyOrderCreatedUnhandled)
+    }else{
+      console.log("keine Consors Finanzierung")
+    }
   }else{
-    console.log("keine Consors Finanzierung")
+    console.log("could not parse fullfilment date:", data)
   }
 }
 

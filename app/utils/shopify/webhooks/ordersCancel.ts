@@ -4,7 +4,7 @@ import { getConsorsClient } from "../../consors/api";
 
 import { createShopifyOrderCancelUnhandled, incrementCounterShopifyOrderCancelUnhandled } from "~/models/ShopifyOrderCancel.server";
 
-const orderCreated = z.object({
+const orderCanceled = z.object({
   id: z.number(),
   admin_graphql_api_id: z.string(),
   current_total_price: z.string(),
@@ -14,14 +14,18 @@ const orderCreated = z.object({
   
 export async function webbhook_oredersCancel(shop: string, payload: unknown){
   const data = payload?.valueOf()
-  const orderData = orderCreated.parse(data)
-  console.log("parsed oderData", orderData)
-  if(orderData.tags.includes('Consors Finanzierung')){
-    console.log("Cancel order because it is Consors Finanzierung:", orderData)
-  const createdShopifyOrderCancelUnhandled = await createShopifyOrderCancelUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
-  console.log("createdShopifyOrderCanceldUnhandled", createdShopifyOrderCancelUnhandled)
+  if(orderCanceled.safeParse(data)){
+    const orderData = orderCanceled.parse(data)
+    console.log("parsed oderData", orderData)
+    if(orderData.tags.includes('Consors Finanzierung')){
+      console.log("Cancel order because it is Consors Finanzierung:", orderData)
+    const createdShopifyOrderCancelUnhandled = await createShopifyOrderCancelUnhandled(shop, orderData.id, orderData.admin_graphql_api_id, orderData.current_total_price)
+    console.log("createdShopifyOrderCanceldUnhandled", createdShopifyOrderCancelUnhandled)
+    }else{
+      console.log("keine Consors Finanzierung")
+    }
   }else{
-    console.log("keine Consors Finanzierung")
+    console.log("could not parse calcel date:", data)
   }
 }
 
