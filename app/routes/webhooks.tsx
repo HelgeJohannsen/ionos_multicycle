@@ -14,7 +14,7 @@ export const action = async ({ request }) => {
   await console.log("got a webhook")
   const { topic, shop, session,payload  } = await authenticate.webhook(request);
 
-  console.log("authenticated, ", topic, shop)
+  console.log("authenticated, ", topic, shop, session?.shop)
   try{
     switch (topic) {
       case "APP_UNINSTALLED":
